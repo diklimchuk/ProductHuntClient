@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
   compileSdkVersion 26
@@ -10,6 +11,10 @@ android {
     targetSdkVersion 26
     versionCode 1
     versionName "1.0"
+
+    buildConfigField "String", "REST_HOST", '"https://api.producthunt.com/v1/"'
+    buildConfigField "String", "ACCESS_TOKEN", '"591f99547f569b05ba7d8777e2e0824eea16c440292cce1f8dfb3952cc9937ff"'
+
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
   buildTypes {
