@@ -1,0 +1,46 @@
+ext {
+  /* Build */
+  gradlePluginVersion = '3.0.0-alpha8'
+  /* Language */
+  kotlinVersion = '1.1.3-2'
+
+  /* Android */
+  buildToolsVersion = '26.0.1'
+  supportLibraryVersion = '26.0.0'
+
+  /* Libraries */
+  daggerVersion = '2.11'
+  retrofitVersion = '2.3.0'
+  okHttpVersion = '3.8.1'
+  rxJavaVersion = '2.1.1'
+  rxAndroidVersion = '2.0.1'
+  rxPermissionsVersion = '0.9.4'
+
+  buildDependencies = [
+      gradlePlugin: "com.android.tools.build:gradle:$gradlePluginVersion"
+  ]
+
+  languageDependencies = [
+      kotlinStdlib: "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion",
+      kotlinPlugin: "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion",
+  ]
+
+  androidDependencies = [
+      appcompatv7: "com.android.support:appcompat-v7:$supportLibraryVersion",
+  ]
+
+  libraryDependencies = [
+      dagger                  : "com.google.dagger:dagger:$daggerVersion",
+      daggerCompiler          : "com.google.dagger:dagger-compiler:$daggerVersion",
+
+      retrofit                : "com.squareup.retrofit2:retrofit:$retrofitVersion",
+      retrofitRxAdapter       : "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion",
+      moshiConverter          : "com.squareup.retrofit2:converter-moshi:$retrofitVersion",
+
+      okHttpLoggingInterceptor: "com.squareup.okhttp3:logging-interceptor:$okHttpVersion",
+
+      rxJava                  : "io.reactivex.rxjava2:rxjava:$rxJavaVersion",
+      rxAndroid               : "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion",
+      rxPermissions           : "com.tbruyelle.rxpermissions:rxpermissions:$rxPermissionsVersion@aar",
+  ]
+}
