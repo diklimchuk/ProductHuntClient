@@ -9,6 +9,7 @@ ext {
   supportLibraryVersion = '26.0.0'
 
   /* Libraries */
+  architectureComponentsVersion = '1.0.0-alpha5'
   daggerVersion = '2.11'
   retrofitVersion = '2.3.0'
   okHttpVersion = '3.8.1'
@@ -30,6 +31,10 @@ ext {
   ]
 
   libraryDependencies = [
+      lifecycleCompiler       : "android.arch.lifecycle:compiler:$architectureComponentsVersion",
+      lifecycleRuntime        : "android.arch.lifecycle:runtime:$architectureComponentsVersion",
+      lifecycleExtensions     : "android.arch.lifecycle:extensions:$architectureComponentsVersion",
+
       dagger                  : "com.google.dagger:dagger:$daggerVersion",
       daggerCompiler          : "com.google.dagger:dagger-compiler:$daggerVersion",
 

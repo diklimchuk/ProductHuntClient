@@ -35,6 +35,10 @@ dependencies {
   implementation libraryDependencies.dagger
   kapt libraryDependencies.daggerCompiler
 
+  implementation libraryDependencies.lifecycleRuntime
+  implementation libraryDependencies.lifecycleExtensions
+  kapt libraryDependencies.lifecycleCompiler
+
   implementation libraryDependencies.rxJava
   implementation libraryDependencies.rxAndroid
   implementation libraryDependencies.rxPermissions
