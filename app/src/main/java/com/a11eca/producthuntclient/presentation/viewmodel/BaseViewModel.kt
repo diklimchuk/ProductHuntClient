@@ -2,19 +2,25 @@ package com.a11eca.producthuntclient.presentation.viewmodel
 
 import android.arch.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 /**
  * Base class for ViewModels.
  *
- * Disposes disposables when destroyed.
+ * Disposes disposables in [onCleared].
  */
 open class BaseViewModel : ViewModel() {
 
-  protected val disposables = CompositeDisposable()
+  private val disposables: CompositeDisposable = CompositeDisposable()
+
+  protected fun <T : Disposable> addLocalScopeDisposable(disposable: T): T {
+    disposables.add(disposable)
+    return disposable
+  }
 
   override fun onCleared() {
     super.onCleared()
 
-    disposables.dispose()
+    disposables.clear()
   }
 }

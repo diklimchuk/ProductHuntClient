@@ -16,7 +16,7 @@ ext {
   rxJavaVersion = '2.1.1'
   rxAndroidVersion = '2.0.1'
   rxPermissionsVersion = '0.9.4'
-  databindingVersion = '3.0.0-alpha5'
+  databindingVersion = gradlePluginVersion
 
   buildDependencies = [
       gradlePlugin: "com.android.tools.build:gradle:$gradlePluginVersion"

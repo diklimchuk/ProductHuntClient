@@ -10,5 +10,6 @@ class ApiCategoryDataSource @Inject constructor(
 ): CategoryDataSource {
   override fun getCategories(): Flowable<List<JsonCategory>> {
     return service.getCategories()
+        .map { (categories) -> categories }
   }
 }

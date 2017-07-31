@@ -1,6 +1,5 @@
 package com.a11eca.producthuntclient.presentation.fragment
 
-import android.arch.lifecycle.LifecycleFragment
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
@@ -10,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.a11eca.producthuntclient.R
 import com.a11eca.producthuntclient.databinding.FragmentCollectionsBinding
+import com.a11eca.producthuntclient.domain.entity.Category
 import com.a11eca.producthuntclient.presentation.PHCApplication
 import com.a11eca.producthuntclient.presentation.viewmodel.CategoriesViewModel
 import javax.inject.Inject
@@ -30,9 +30,15 @@ class CollectionsFragment : BaseFragment() {
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
 
+    (activity.application as PHCApplication).applicationComponent.inject(this)
+
     categoriesViewModel = ViewModelProviders.of(this, viewModelFactory)
         .get(CategoriesViewModel::class.java)
 
-    (activity.application as PHCApplication).applicationComponent.inject(this)
+    categoriesViewModel.getCategories().observe(this, this::showCategories, {}, {})
+  }
+
+  fun showCategories(categories: List<Category>) {
+    binding.categories.text = categories.fold("", { acc, category -> acc + category + "\n" })
   }
 }

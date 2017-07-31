@@ -3,6 +3,7 @@ package com.a11eca.producthuntclient.presentation
 import android.app.Application
 import com.a11eca.producthuntclient.di.component.ApplicationComponent
 import com.a11eca.producthuntclient.di.component.DaggerApplicationComponent
+import com.a11eca.producthuntclient.di.module.ApplicationModule
 
 class PHCApplication : Application() {
 
@@ -16,7 +17,7 @@ class PHCApplication : Application() {
 
   private fun initializeInjector() {
     this.applicationComponent = DaggerApplicationComponent.builder()
-        //.applicationModule(ApplicationModule(this))
+        .applicationModule(ApplicationModule(this))
         .build()
   }
 }
