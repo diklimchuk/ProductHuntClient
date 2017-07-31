@@ -39,6 +39,10 @@ dependencies {
   implementation libraryDependencies.rxAndroid
   implementation libraryDependencies.rxPermissions
 
+  implementation libraryDependencies.retrofit
+  implementation libraryDependencies.moshiConverter
+  implementation libraryDependencies.okHttpLoggingInterceptor
+  implementation libraryDependencies.retrofitRxAdapter
 
   testImplementation 'junit:junit:4.12'
   androidTestImplementation 'com.android.support.test:runner:0.5'

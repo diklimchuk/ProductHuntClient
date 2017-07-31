@@ -5,5 +5,5 @@ data class Category(
     val slug: String,
     val name: String,
     val color: String,
-    val item_name: String
+    val itemName: String
 )
