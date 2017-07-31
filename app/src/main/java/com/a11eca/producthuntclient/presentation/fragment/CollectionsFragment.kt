@@ -7,8 +7,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.SimpleAdapter
 import android.widget.SpinnerAdapter
+import android.widget.Toast
 import com.a11eca.producthuntclient.R
 import com.a11eca.producthuntclient.databinding.FragmentCollectionsBinding
 import com.a11eca.producthuntclient.presentation.PHCApplication
@@ -16,7 +18,7 @@ import com.a11eca.producthuntclient.presentation.entity.CategoriesData
 import com.a11eca.producthuntclient.presentation.viewmodel.CategoriesViewModel
 import javax.inject.Inject
 
-class CollectionsFragment : BaseFragment() {
+class CollectionsFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
 
   @Inject
   internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -25,6 +27,8 @@ class CollectionsFragment : BaseFragment() {
 
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     binding = DataBindingUtil.inflate(inflater, R.layout.fragment_collections, container, false)
+
+    binding.categories.onItemSelectedListener = this
 
     return binding.root
   }
@@ -49,5 +53,19 @@ class CollectionsFragment : BaseFragment() {
         android.R.layout.simple_spinner_item, data.from, intArrayOf(android.R.id.text1))
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
     return adapter
+  }
+
+  override fun onNothingSelected(parent: AdapterView<*>) {
+    Toast.makeText(context, "No category selected", Toast.LENGTH_SHORT).show()
+  }
+
+  override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
+    val itemData = binding.categories.adapter.getItem(pos)
+    val categoryId = extractCategoryId(itemData as Map<String, Any>)
+    Toast.makeText(context, "Setected category with $categoryId", Toast.LENGTH_SHORT).show()
+  }
+
+  private fun extractCategoryId(itemData: Map<String, Any>): Long {
+    return itemData[CategoriesData.KEY_ID] as Long
   }
 }
