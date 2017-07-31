@@ -8,21 +8,21 @@ import javax.inject.Inject
 
 class GetPostsUseCase @Inject constructor(
     private val repo: PostsRepo
-){
+) {
 
   companion object {
     private const val DEFAULT_FILTER = "tech"
   }
 
   fun getFilter(): Flowable<String> {
-    return Flowable.just(DEFAULT_FILTER)
+    return repo.getFilter(DEFAULT_FILTER)
   }
 
-  fun setFilter(category: String): Completable {
-    return Completable.complete()
+  fun setFilter(categorySlug: String): Completable {
+    return repo.setFilter(categorySlug)
   }
 
-  fun getFiltered(category: String): Flowable<List<Post>> {
-    return repo.getPosts(category)
+  fun getFiltered(categorySlug: String): Flowable<List<Post>> {
+    return repo.getPosts(categorySlug)
   }
 }

@@ -30,7 +30,6 @@ class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     binding = DataBindingUtil.inflate(inflater, R.layout.fragment_posts, container, false)
 
-    binding.categories.onItemSelectedListener = this
     setupPostsList()
 
     return binding.root
@@ -46,6 +45,12 @@ class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
 
     categoriesViewModel.getCategories().observe(this, this::showCategories, {}, {})
     categoriesViewModel.getPosts().observe(this, this::showPosts, {}, {})
+  }
+
+  override fun onStart() {
+    super.onStart()
+
+    binding.categories.onItemSelectedListener = this
   }
 
   private fun setupPostsList() {
@@ -77,11 +82,11 @@ class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
 
   override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
     val itemData = binding.categories.adapter.getItem(pos)
-    val category = extractCategoryName(itemData as Map<String, String>)
+    val category = extractCategorySlug(itemData as Map<String, String>)
     categoriesViewModel.setPostsFilter(category)
   }
 
-  private fun extractCategoryName(itemData: Map<String, String>): String {
-    return itemData[CategoriesData.KEY_NAME]!!
+  private fun extractCategorySlug(itemData: Map<String, String>): String {
+    return itemData[CategoriesData.KEY_SLUG]!!
   }
 }

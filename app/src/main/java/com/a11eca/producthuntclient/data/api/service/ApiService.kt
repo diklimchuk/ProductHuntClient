@@ -15,5 +15,5 @@ interface ApiService {
   fun getCategories(): Flowable<JsonCategories>
 
   @GET("posts/all")
-  fun getFilteredPosts(@Query("\"search[category]\"") category: String): Flowable<JsonPosts>
+  fun getFilteredPosts(@Query("search[category]") category: String): Flowable<JsonPosts>
 }

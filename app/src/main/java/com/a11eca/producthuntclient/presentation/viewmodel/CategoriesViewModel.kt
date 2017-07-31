@@ -16,13 +16,13 @@ class CategoriesViewModel @Inject constructor(
 
   fun getCategories(): LiveItems<CategoriesData> {
     return addLocalScopeDisposable(getPostsUseCase.getFilter()
-        .flatMap {
+        .switchMap {
           filterCategory ->
           getCategoryUseCase.getCategories()
               .map { categories ->
                 CategoriesData(categories.sortedBy {
-                  (id, name) ->
-                  if (name == filterCategory) {
+                  (id, slug) ->
+                  if (slug == filterCategory) {
                     -1L
                   } else {
                     id
@@ -34,8 +34,8 @@ class CategoriesViewModel @Inject constructor(
         .subscribeWith(LiveFlow<CategoriesData>()))
   }
 
-  fun setPostsFilter(category: String) {
-    addLocalScopeDisposable(getPostsUseCase.setFilter(category)
+  fun setPostsFilter(categorySlug: String) {
+    addLocalScopeDisposable(getPostsUseCase.setFilter(categorySlug)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe({}, {}))
   }
