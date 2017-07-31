@@ -7,10 +7,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SimpleAdapter
+import android.widget.SpinnerAdapter
 import com.a11eca.producthuntclient.R
 import com.a11eca.producthuntclient.databinding.FragmentCollectionsBinding
-import com.a11eca.producthuntclient.domain.entity.Category
 import com.a11eca.producthuntclient.presentation.PHCApplication
+import com.a11eca.producthuntclient.presentation.entity.CategoriesData
 import com.a11eca.producthuntclient.presentation.viewmodel.CategoriesViewModel
 import javax.inject.Inject
 
@@ -38,7 +40,14 @@ class CollectionsFragment : BaseFragment() {
     categoriesViewModel.getCategories().observe(this, this::showCategories, {}, {})
   }
 
-  fun showCategories(categories: List<Category>) {
-    binding.categories.text = categories.fold("", { acc, category -> acc + category + "\n" })
+  fun showCategories(data: CategoriesData) {
+    binding.categories.adapter = createCategoriesAdapter(data)
+  }
+
+  fun createCategoriesAdapter(data: CategoriesData): SpinnerAdapter {
+    val adapter = SimpleAdapter(context, data.data,
+        android.R.layout.simple_spinner_item, data.from, intArrayOf(android.R.id.text1))
+    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+    return adapter
   }
 }
