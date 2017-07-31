@@ -13,5 +13,5 @@ abstract class ViewModelModule {
   @Binds
   @IntoMap
   @ViewModelKey(CategoriesViewModel::class)
-  abstract fun provideCreateOrderPresenter(viewModel: CategoriesViewModel): ViewModel
+  abstract fun bindCategoriesViewModel(viewModel: CategoriesViewModel): ViewModel
 }

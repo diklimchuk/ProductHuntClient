@@ -1,7 +1,7 @@
 package com.a11eca.producthuntclient.presentation
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import com.a11eca.producthuntclient.R
 
 class MainActivity : AppCompatActivity() {
