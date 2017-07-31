@@ -6,4 +6,9 @@ data class ProductCollection(
     val title: String,
     val upvoteNumber: Long,
     val thumbnailUrl: String
-)
+) {
+  companion object {
+    const val NO_TITLE = ""
+    const val NO_THUMBNAIL = ""
+  }
+}
