@@ -34,6 +34,7 @@ dependencies {
   implementation languageDependencies.kotlinStdlib
 
   implementation androidDependencies.appcompatv7
+  implementation androidDependencies.recyclerView
 
   implementation libraryDependencies.dagger
   kapt libraryDependencies.daggerCompiler

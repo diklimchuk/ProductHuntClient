@@ -17,6 +17,7 @@ ext {
   rxAndroidVersion = '2.0.1'
   rxPermissionsVersion = '0.9.4'
   databindingVersion = gradlePluginVersion
+  recyclerViewVersion = supportLibraryVersion
 
   buildDependencies = [
       gradlePlugin: "com.android.tools.build:gradle:$gradlePluginVersion"
@@ -28,7 +29,8 @@ ext {
   ]
 
   androidDependencies = [
-      appcompatv7: "com.android.support:appcompat-v7:$supportLibraryVersion",
+      appcompatv7 : "com.android.support:appcompat-v7:$supportLibraryVersion",
+      recyclerView: "com.android.support:recyclerview-v7:$recyclerViewVersion",
   ]
 
   libraryDependencies = [

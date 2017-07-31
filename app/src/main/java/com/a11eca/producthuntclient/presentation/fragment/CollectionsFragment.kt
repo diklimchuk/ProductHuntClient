@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.a11eca.producthuntclient.R
 import com.a11eca.producthuntclient.databinding.FragmentCollectionsBinding
 import com.a11eca.producthuntclient.domain.entity.ProductCollection
 import com.a11eca.producthuntclient.presentation.PHCApplication
+import com.a11eca.producthuntclient.presentation.adapter.CollectionsAdapter
 import com.a11eca.producthuntclient.presentation.entity.CategoriesData
 import com.a11eca.producthuntclient.presentation.livedata.LiveFlow
 import com.a11eca.producthuntclient.presentation.viewmodel.CategoriesViewModel
@@ -30,6 +32,7 @@ class CollectionsFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
     binding = DataBindingUtil.inflate(inflater, R.layout.fragment_collections, container, false)
 
     binding.categories.onItemSelectedListener = this
+    setupCollectionsList()
 
     return binding.root
   }
@@ -46,8 +49,18 @@ class CollectionsFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
     categoriesViewModel.getCollections().observe(this, this::showCollections, {}, {})
   }
 
+  private fun setupCollectionsList() {
+    binding.collections.setHasFixedSize(true)
+
+    val layoutManager = LinearLayoutManager(context)
+    binding.collections.layoutManager = layoutManager
+
+    val adapter = CollectionsAdapter()
+    binding.collections.adapter = adapter
+  }
+
   fun showCollections(data: List<ProductCollection>) {
-    binding.text.text = data.fold("", { acc, collection -> acc + collection + "\n"})
+    (binding.collections.adapter as CollectionsAdapter).updateItems(data)
   }
 
   fun showCategories(data: CategoriesData) {
