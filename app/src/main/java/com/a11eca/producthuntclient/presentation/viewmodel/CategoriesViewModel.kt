@@ -1,11 +1,13 @@
 package com.a11eca.producthuntclient.presentation.viewmodel
 
+import com.a11eca.producthuntclient.domain.entity.Category
 import com.a11eca.producthuntclient.domain.entity.Post
 import com.a11eca.producthuntclient.domain.usecase.GetCategoryUseCase
 import com.a11eca.producthuntclient.domain.usecase.GetPostsUseCase
 import com.a11eca.producthuntclient.presentation.entity.CategoriesData
 import com.a11eca.producthuntclient.presentation.livedata.LiveFlow
 import com.a11eca.producthuntclient.presentation.livedata.LiveItems
+import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
@@ -19,16 +21,7 @@ class CategoriesViewModel @Inject constructor(
         .switchMap {
           filterCategory ->
           getCategoryUseCase.getCategories()
-              .map { categories ->
-                CategoriesData(categories.sortedBy {
-                  (id, slug) ->
-                  if (slug == filterCategory) {
-                    -1L
-                  } else {
-                    id
-                  }
-                })
-              }
+              .map { categories -> CategoriesData(sortCategories(filterCategory, categories)) }
         }
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeWith(LiveFlow<CategoriesData>()))
@@ -43,11 +36,22 @@ class CategoriesViewModel @Inject constructor(
   fun getPosts(): LiveFlow<List<Post>> {
     return addLocalScopeDisposable(getPostsUseCase.getFilter()
         .switchMap {
-          category ->
-          getPostsUseCase.getFiltered(category)
+          filter ->
+          addEmptyPostsList(getPostsUseCase.getFiltered(filter))
         }
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeWith(LiveFlow<List<Post>>())
     )
+  }
+
+  private fun addEmptyPostsList(flowable: Flowable<List<Post>>): Flowable<List<Post>> {
+    return Flowable.just(listOf<Post>()).concatWith(flowable)
+  }
+
+  private fun sortCategories(filterCategorySlug: String, categories: List<Category>): List<Category> {
+    return categories.sortedBy {
+      (id, slug) ->
+      if (slug == filterCategorySlug) -1L else id
+    }
   }
 }
