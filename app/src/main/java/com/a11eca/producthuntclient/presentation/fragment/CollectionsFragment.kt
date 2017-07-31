@@ -26,8 +26,6 @@ class CollectionsFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
   internal lateinit var categoriesViewModel: CategoriesViewModel
   internal lateinit var binding: FragmentCollectionsBinding
 
-  private lateinit var collectionsFlow: LiveFlow<List<ProductCollection>>
-
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     binding = DataBindingUtil.inflate(inflater, R.layout.fragment_collections, container, false)
 
@@ -45,8 +43,11 @@ class CollectionsFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
         .get(CategoriesViewModel::class.java)
 
     categoriesViewModel.getCategories().observe(this, this::showCategories, {}, {})
+    categoriesViewModel.getCollections().observe(this, this::showCollections, {}, {})
+  }
 
-    collectionsFlow = categoriesViewModel.getCollections(0)
+  fun showCollections(data: List<ProductCollection>) {
+    binding.text.text = data.fold("", { acc, collection -> acc + collection + "\n"})
   }
 
   fun showCategories(data: CategoriesData) {
@@ -65,7 +66,7 @@ class CollectionsFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
   override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
     val itemData = binding.categories.adapter.getItem(pos)
     val categoryId = extractCategoryId(itemData as Map<String, Any>)
-    collectionsFlow = categoriesViewModel.getCollections(categoryId)
+    categoriesViewModel.setCollectionsFilter(categoryId)
   }
 
   private fun extractCategoryId(itemData: Map<String, Any>): Long {
