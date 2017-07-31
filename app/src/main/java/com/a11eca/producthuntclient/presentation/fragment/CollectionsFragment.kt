@@ -10,11 +10,12 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.SimpleAdapter
 import android.widget.SpinnerAdapter
-import android.widget.Toast
 import com.a11eca.producthuntclient.R
 import com.a11eca.producthuntclient.databinding.FragmentCollectionsBinding
+import com.a11eca.producthuntclient.domain.entity.ProductCollection
 import com.a11eca.producthuntclient.presentation.PHCApplication
 import com.a11eca.producthuntclient.presentation.entity.CategoriesData
+import com.a11eca.producthuntclient.presentation.livedata.LiveFlow
 import com.a11eca.producthuntclient.presentation.viewmodel.CategoriesViewModel
 import javax.inject.Inject
 
@@ -24,6 +25,8 @@ class CollectionsFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
   internal lateinit var viewModelFactory: ViewModelProvider.Factory
   internal lateinit var categoriesViewModel: CategoriesViewModel
   internal lateinit var binding: FragmentCollectionsBinding
+
+  private lateinit var collectionsFlow: LiveFlow<List<ProductCollection>>
 
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     binding = DataBindingUtil.inflate(inflater, R.layout.fragment_collections, container, false)
@@ -42,6 +45,8 @@ class CollectionsFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
         .get(CategoriesViewModel::class.java)
 
     categoriesViewModel.getCategories().observe(this, this::showCategories, {}, {})
+
+    collectionsFlow = categoriesViewModel.getCollections(0)
   }
 
   fun showCategories(data: CategoriesData) {
@@ -55,14 +60,12 @@ class CollectionsFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
     return adapter
   }
 
-  override fun onNothingSelected(parent: AdapterView<*>) {
-    Toast.makeText(context, "No category selected", Toast.LENGTH_SHORT).show()
-  }
+  override fun onNothingSelected(parent: AdapterView<*>) {}
 
   override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
     val itemData = binding.categories.adapter.getItem(pos)
     val categoryId = extractCategoryId(itemData as Map<String, Any>)
-    Toast.makeText(context, "Setected category with $categoryId", Toast.LENGTH_SHORT).show()
+    collectionsFlow = categoriesViewModel.getCollections(categoryId)
   }
 
   private fun extractCategoryId(itemData: Map<String, Any>): Long {

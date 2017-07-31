@@ -12,7 +12,7 @@ class CategoriesData(val categories: List<Category>) {
   val from = arrayOf(KEY_NAME)
 
   init {
-    data = categories.sortedBy { (id) -> id }.map {
+    data = categories.map {
       (id, name) ->
       mapOf(Pair(KEY_ID, id), Pair(KEY_NAME, name))
     }
