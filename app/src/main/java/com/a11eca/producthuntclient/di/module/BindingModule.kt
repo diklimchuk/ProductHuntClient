@@ -2,9 +2,9 @@ package com.a11eca.producthuntclient.di.module
 
 import android.arch.lifecycle.ViewModelProvider
 import com.a11eca.producthuntclient.data.repo.CategoryRepoImpl
-import com.a11eca.producthuntclient.data.repo.CollectionsRepoImpl
+import com.a11eca.producthuntclient.data.repo.PostsRepoImpl
 import com.a11eca.producthuntclient.domain.repo.CategoryRepo
-import com.a11eca.producthuntclient.domain.repo.CollectionsRepo
+import com.a11eca.producthuntclient.domain.repo.PostsRepo
 import com.a11eca.producthuntclient.presentation.ViewModelFactory
 import dagger.Binds
 import dagger.Module
@@ -17,7 +17,7 @@ abstract class BindingModule {
   abstract fun bindCategoryRepo(repo: CategoryRepoImpl): CategoryRepo
 
   @Binds
-  abstract fun bindCollectionsRepo(repo: CollectionsRepoImpl): CollectionsRepo
+  abstract fun bindPostsRepo(repo: PostsRepoImpl): PostsRepo
 
   @Binds
   @Singleton

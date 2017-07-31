@@ -1,7 +1,7 @@
 package com.a11eca.producthuntclient.data.api.service
 
 import com.a11eca.producthuntclient.data.api.json.JsonCategories
-import com.a11eca.producthuntclient.data.api.json.JsonCollections
+import com.a11eca.producthuntclient.data.api.json.JsonPosts
 import io.reactivex.Flowable
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -14,6 +14,6 @@ interface ApiService {
   @GET("categories")
   fun getCategories(): Flowable<JsonCategories>
 
-  @GET("collections")
-  fun getFilteredCollections(@Query("\"search[category]\"") categoryId: Long): Flowable<JsonCollections>
+  @GET("posts/all")
+  fun getFilteredPosts(@Query("\"search[category]\"") category: String): Flowable<JsonPosts>
 }

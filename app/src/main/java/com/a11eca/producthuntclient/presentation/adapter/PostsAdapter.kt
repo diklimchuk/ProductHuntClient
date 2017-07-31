@@ -7,36 +7,36 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.a11eca.producthuntclient.R
-import com.a11eca.producthuntclient.domain.entity.ProductCollection
+import com.a11eca.producthuntclient.domain.entity.Post
 
-class CollectionsAdapter : RecyclerView.Adapter<CollectionViewHolder>() {
+class PostsAdapter : RecyclerView.Adapter<PostViewHolder>() {
 
-  private var items = listOf<ProductCollection>()
+  private var items = listOf<Post>()
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CollectionViewHolder {
-    val view = LayoutInflater.from(parent.context).inflate(R.layout.item_collection, parent, false)
-    val viewHolder = CollectionViewHolder(view)
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
+    val view = LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false)
+    val viewHolder = PostViewHolder(view)
     return viewHolder
   }
 
-  override fun onBindViewHolder(holder: CollectionViewHolder, position: Int) {
+  override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
     val item = items[position]
     holder.name.text = item.name
-    holder.title.text = if (item.title != ProductCollection.NO_TITLE) item.title else ""
-    holder.upvoteNumber.text = item.upvoteNumber.toString()
+    holder.title.text = item.description
+    holder.upvoteNumber.text = item.votesCount.toString()
   }
 
   override fun getItemCount(): Int {
     return items.size
   }
 
-  fun updateItems(items: List<ProductCollection>) {
+  fun updateItems(items: List<Post>) {
     this.items = items
     notifyDataSetChanged()
   }
 }
 
-class CollectionViewHolder constructor(
+class PostViewHolder constructor(
     itemView: View
 ): RecyclerView.ViewHolder(itemView) {
   val thumbnail: ImageView = itemView.findViewById(R.id.thumbnail)

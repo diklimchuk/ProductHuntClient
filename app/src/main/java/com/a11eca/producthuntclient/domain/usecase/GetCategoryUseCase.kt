@@ -10,21 +10,7 @@ class GetCategoryUseCase @Inject constructor(
     private val repo: CategoryRepo
 ) {
 
-  companion object {
-    const val DEFAULT_CATEGORY_NAME = "slug"
-    const val DEFAULT_CATEGORY_ID_IF_NAME_NOT_FOUND = 0L
-  }
-
   fun getCategories(): Flowable<List<Category>> {
     return repo.getCategories()
-  }
-
-  fun getDefaultCategoryId(): Single<Long> {
-    return repo.getCategories()
-        .map {
-          categories ->
-          categories.find { category -> category.slug == DEFAULT_CATEGORY_NAME }?.id ?: DEFAULT_CATEGORY_ID_IF_NAME_NOT_FOUND
-        }
-        .firstOrError()
   }
 }

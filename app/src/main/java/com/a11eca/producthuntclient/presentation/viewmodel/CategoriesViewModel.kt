@@ -1,8 +1,8 @@
 package com.a11eca.producthuntclient.presentation.viewmodel
 
-import com.a11eca.producthuntclient.domain.entity.ProductCollection
+import com.a11eca.producthuntclient.domain.entity.Post
 import com.a11eca.producthuntclient.domain.usecase.GetCategoryUseCase
-import com.a11eca.producthuntclient.domain.usecase.GetCollectionsUseCase
+import com.a11eca.producthuntclient.domain.usecase.GetPostsUseCase
 import com.a11eca.producthuntclient.presentation.entity.CategoriesData
 import com.a11eca.producthuntclient.presentation.livedata.LiveFlow
 import com.a11eca.producthuntclient.presentation.livedata.LiveItems
@@ -11,19 +11,18 @@ import javax.inject.Inject
 
 class CategoriesViewModel @Inject constructor(
     private val getCategoryUseCase: GetCategoryUseCase,
-    private val getCollectionsUseCase: GetCollectionsUseCase
+    private val getPostsUseCase: GetPostsUseCase
 ) : BaseViewModel() {
 
   fun getCategories(): LiveItems<CategoriesData> {
-    return addLocalScopeDisposable(getCategoryUseCase.getDefaultCategoryId()
-        .toFlowable()
+    return addLocalScopeDisposable(getPostsUseCase.getFilter()
         .flatMap {
-          defaultCategoryId ->
+          filterCategory ->
           getCategoryUseCase.getCategories()
               .map { categories ->
                 CategoriesData(categories.sortedBy {
-                  (id) ->
-                  if (id == defaultCategoryId) {
+                  (id, name) ->
+                  if (name == filterCategory) {
                     -1L
                   } else {
                     id
@@ -35,20 +34,20 @@ class CategoriesViewModel @Inject constructor(
         .subscribeWith(LiveFlow<CategoriesData>()))
   }
 
-  fun setCollectionsFilter(categoryId: Long) {
-    addLocalScopeDisposable(getCollectionsUseCase.setFilter(categoryId)
+  fun setPostsFilter(category: String) {
+    addLocalScopeDisposable(getPostsUseCase.setFilter(category)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe({}, {}))
   }
 
-  fun getCollections(): LiveFlow<List<ProductCollection>> {
-    return addLocalScopeDisposable(getCollectionsUseCase.getFilter()
+  fun getPosts(): LiveFlow<List<Post>> {
+    return addLocalScopeDisposable(getPostsUseCase.getFilter()
         .switchMap {
-          categoryId ->
-          getCollectionsUseCase.getFiltered(categoryId)
+          category ->
+          getPostsUseCase.getFiltered(category)
         }
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribeWith(LiveFlow<List<ProductCollection>>())
+        .subscribeWith(LiveFlow<List<Post>>())
     )
   }
 }

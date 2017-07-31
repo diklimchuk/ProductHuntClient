@@ -12,27 +12,26 @@ import android.widget.AdapterView
 import android.widget.SimpleAdapter
 import android.widget.SpinnerAdapter
 import com.a11eca.producthuntclient.R
-import com.a11eca.producthuntclient.databinding.FragmentCollectionsBinding
-import com.a11eca.producthuntclient.domain.entity.ProductCollection
+import com.a11eca.producthuntclient.databinding.FragmentPostsBinding
+import com.a11eca.producthuntclient.domain.entity.Post
 import com.a11eca.producthuntclient.presentation.PHCApplication
-import com.a11eca.producthuntclient.presentation.adapter.CollectionsAdapter
+import com.a11eca.producthuntclient.presentation.adapter.PostsAdapter
 import com.a11eca.producthuntclient.presentation.entity.CategoriesData
-import com.a11eca.producthuntclient.presentation.livedata.LiveFlow
 import com.a11eca.producthuntclient.presentation.viewmodel.CategoriesViewModel
 import javax.inject.Inject
 
-class CollectionsFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
+class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
 
   @Inject
   internal lateinit var viewModelFactory: ViewModelProvider.Factory
   internal lateinit var categoriesViewModel: CategoriesViewModel
-  internal lateinit var binding: FragmentCollectionsBinding
+  internal lateinit var binding: FragmentPostsBinding
 
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-    binding = DataBindingUtil.inflate(inflater, R.layout.fragment_collections, container, false)
+    binding = DataBindingUtil.inflate(inflater, R.layout.fragment_posts, container, false)
 
     binding.categories.onItemSelectedListener = this
-    setupCollectionsList()
+    setupPostsList()
 
     return binding.root
   }
@@ -46,21 +45,21 @@ class CollectionsFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
         .get(CategoriesViewModel::class.java)
 
     categoriesViewModel.getCategories().observe(this, this::showCategories, {}, {})
-    categoriesViewModel.getCollections().observe(this, this::showCollections, {}, {})
+    categoriesViewModel.getPosts().observe(this, this::showPosts, {}, {})
   }
 
-  private fun setupCollectionsList() {
-    binding.collections.setHasFixedSize(true)
+  private fun setupPostsList() {
+    binding.posts.setHasFixedSize(true)
 
     val layoutManager = LinearLayoutManager(context)
-    binding.collections.layoutManager = layoutManager
+    binding.posts.layoutManager = layoutManager
 
-    val adapter = CollectionsAdapter()
-    binding.collections.adapter = adapter
+    val adapter = PostsAdapter()
+    binding.posts.adapter = adapter
   }
 
-  fun showCollections(data: List<ProductCollection>) {
-    (binding.collections.adapter as CollectionsAdapter).updateItems(data)
+  fun showPosts(data: List<Post>) {
+    (binding.posts.adapter as PostsAdapter).updateItems(data)
   }
 
   fun showCategories(data: CategoriesData) {
@@ -78,11 +77,11 @@ class CollectionsFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
 
   override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
     val itemData = binding.categories.adapter.getItem(pos)
-    val categoryId = extractCategoryId(itemData as Map<String, Any>)
-    categoriesViewModel.setCollectionsFilter(categoryId)
+    val category = extractCategoryName(itemData as Map<String, String>)
+    categoriesViewModel.setPostsFilter(category)
   }
 
-  private fun extractCategoryId(itemData: Map<String, Any>): Long {
-    return itemData[CategoriesData.KEY_ID] as Long
+  private fun extractCategoryName(itemData: Map<String, String>): String {
+    return itemData[CategoriesData.KEY_NAME]!!
   }
 }
