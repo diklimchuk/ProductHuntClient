@@ -18,6 +18,7 @@ ext {
   rxPermissionsVersion = '0.9.4'
   databindingVersion = gradlePluginVersion
   recyclerViewVersion = supportLibraryVersion
+  glideVersion = '3.8.0'
 
   buildDependencies = [
       gradlePlugin: "com.android.tools.build:gradle:$gradlePluginVersion"
@@ -52,5 +53,7 @@ ext {
       rxPermissions           : "com.tbruyelle.rxpermissions:rxpermissions:$rxPermissionsVersion@aar",
 
       databindingCompiler     : "com.android.databinding:compiler:$databindingVersion",
+
+      glide                   : "com.github.bumptech.glide:glide:$glideVersion",
   ]
 }
