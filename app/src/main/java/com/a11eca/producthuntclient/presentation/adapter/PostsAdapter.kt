@@ -6,13 +6,23 @@ import android.view.ViewGroup
 import com.a11eca.producthuntclient.databinding.ItemPostBinding
 import com.a11eca.producthuntclient.domain.entity.Post
 
-class PostsAdapter : RecyclerView.Adapter<PostViewHolder>() {
+class PostsAdapter constructor(
+    private val layoutManager: RecyclerView.LayoutManager,
+    private val listener: OnPostSelectedListener
+): RecyclerView.Adapter<PostViewHolder>() {
 
   private var items = listOf<Post>()
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
     val layoutInflater = LayoutInflater.from(parent.context)
     val binding = ItemPostBinding.inflate(layoutInflater, parent, false)
+
+    binding.root.setOnClickListener {
+      view ->
+      val position = layoutManager.getPosition(view)
+      listener.onPostSelected(items[position].id)
+    }
+
     val viewHolder = PostViewHolder(binding)
     return viewHolder
   }
@@ -31,6 +41,10 @@ class PostsAdapter : RecyclerView.Adapter<PostViewHolder>() {
     this.items = items
     notifyDataSetChanged()
   }
+}
+
+interface OnPostSelectedListener {
+  fun onPostSelected(postId: Long)
 }
 
 class PostViewHolder constructor(

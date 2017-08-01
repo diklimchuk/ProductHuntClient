@@ -11,16 +11,18 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.SimpleAdapter
 import android.widget.SpinnerAdapter
+import android.widget.Toast
 import com.a11eca.producthuntclient.R
 import com.a11eca.producthuntclient.databinding.FragmentPostsBinding
 import com.a11eca.producthuntclient.domain.entity.Post
 import com.a11eca.producthuntclient.presentation.PHCApplication
+import com.a11eca.producthuntclient.presentation.adapter.OnPostSelectedListener
 import com.a11eca.producthuntclient.presentation.adapter.PostsAdapter
 import com.a11eca.producthuntclient.presentation.entity.CategoriesData
 import com.a11eca.producthuntclient.presentation.viewmodel.CategoriesViewModel
 import javax.inject.Inject
 
-class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
+class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener, OnPostSelectedListener {
 
   @Inject
   internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -59,7 +61,7 @@ class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
     val layoutManager = LinearLayoutManager(context)
     binding.posts.layoutManager = layoutManager
 
-    val adapter = PostsAdapter()
+    val adapter = PostsAdapter(layoutManager, this)
     binding.posts.adapter = adapter
   }
 
@@ -76,6 +78,10 @@ class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
         android.R.layout.simple_spinner_item, data.from, intArrayOf(android.R.id.text1))
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
     return adapter
+  }
+
+  override fun onPostSelected(postId: Long) {
+    Toast.makeText(context, "Selected post with id=$postId", Toast.LENGTH_SHORT).show()
   }
 
   override fun onNothingSelected(parent: AdapterView<*>) {}
