@@ -5,12 +5,18 @@ import okhttp3.Interceptor
 import okhttp3.Interceptor.Chain
 import okhttp3.Response
 
+/**
+ * [Interceptor] that is responsible for authentication in api.
+ */
 class AuthInterceptor : Interceptor {
 
   companion object {
     const val ACCESS_TOKEN_HEADER = "access_token"
   }
 
+  /**
+   * Adds access_token to every request.
+   */
   override fun intercept(chain: Chain): Response {
     val request = chain.request()
     val url = request.url()

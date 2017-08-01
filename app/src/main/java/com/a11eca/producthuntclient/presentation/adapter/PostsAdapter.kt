@@ -2,11 +2,7 @@ package com.a11eca.producthuntclient.presentation.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import com.a11eca.producthuntclient.R
 import com.a11eca.producthuntclient.databinding.ItemPostBinding
 import com.a11eca.producthuntclient.domain.entity.Post
 

@@ -13,7 +13,7 @@ class CategoriesData(val categories: List<Category>) {
 
   init {
     data = categories.map {
-      category -> mapOf(Pair(KEY_NAME, category.name), Pair(KEY_SLUG, category.slug))
+      (_, slug, name) -> mapOf(Pair(KEY_NAME, name), Pair(KEY_SLUG, slug))
     }
   }
 }
