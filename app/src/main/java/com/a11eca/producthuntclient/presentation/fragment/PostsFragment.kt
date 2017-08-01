@@ -47,10 +47,6 @@ class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener, OnPost
     setupPostsList()
   }
 
-  override fun onStart() {
-    super.onStart()
-  }
-
   private fun setupPostsList() {
     binding.posts.setHasFixedSize(true)
 
@@ -90,6 +86,7 @@ class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener, OnPost
   override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
     categoriesViewModel.posts.clear()
     val itemData = binding.categories.adapter.getItem(pos)
+    @Suppress("UNCHECKED_CAST")
     val category = extractCategorySlug(itemData as Map<String, String>)
     categoriesViewModel.setPostsFilter(category)
   }

@@ -10,7 +10,6 @@ import com.a11eca.producthuntclient.presentation.livedata.LiveCollector
 import com.a11eca.producthuntclient.presentation.livedata.LiveFlow
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
-import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -35,23 +34,17 @@ class CategoriesViewModel @Inject constructor(
   val posts = addLocalScopeDisposable(getPostsUseCase.getFilter()
       .switchMap {
         filter ->
-        addEmptyPostsList(
-            postPages.toFlowable(BackpressureStrategy.BUFFER)
-                .flatMap {
-                  pageNumber ->
-                  if (pageNumber == 0L) {
-                    Flowable.empty()
-                  } else {
-                    getPostsUseCase.getFiltered(filter, pageNumber)
-                  }
-                })
+        postPages.toFlowable(BackpressureStrategy.BUFFER)
+            .flatMap {
+              pageNumber ->
+              getPostsUseCase.getFiltered(filter, pageNumber)
+            }
       }
       .observeOn(AndroidSchedulers.mainThread())
       .subscribeWith(LiveCollector<Post>()))!!
 
   fun setPostsFilter(categorySlug: String) {
     val completable = Completable.concatArray(
-        Completable.fromRunnable { postPages.onNext(0) },
         getPostsUseCase.setFilter(categorySlug),
         Completable.fromRunnable { postPages.onNext(1) }
     )
@@ -69,10 +62,6 @@ class CategoriesViewModel @Inject constructor(
         }
         .subscribeOn(Schedulers.computation())
         .subscribe({}, {}))
-  }
-
-  private fun addEmptyPostsList(flowable: Flowable<List<Post>>): Flowable<List<Post>> {
-    return Flowable.just(listOf<Post>()).concatWith(flowable)
   }
 
   private fun sortCategories(filterCategorySlug: String, categories: List<Category>): List<Category> {

@@ -4,12 +4,15 @@ import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
+import io.reactivex.Flowable
 import io.reactivex.subscribers.ResourceSubscriber
 
 /**
- * Adapter class for which makes [LiveData] easier to use.
+ * Adapter class which subscribes to [Flowable] and notifies observers of the last element
+ * emitted with onNext.
  */
-class LiveFlow<T : Any> : ResourceSubscriber<T>(), LiveItems<T> {
+class LiveFlow<T : Any> : ResourceSubscriber<T>() {
+
 
   private val liveData = MutableLiveData<T>()
 
@@ -21,44 +24,15 @@ class LiveFlow<T : Any> : ResourceSubscriber<T>(), LiveItems<T> {
     liveData.value = t
   }
 
-  override fun observe(owner: LifecycleOwner, onNext: (T) -> Unit) {
+  /**
+   * Same as [LiveData.observe].
+   */
+  fun observe(owner: LifecycleOwner, onNext: (T) -> Unit) {
     liveData.observe(owner, Observer {
       data ->
       if (data != null) {
         onNext(data)
       }
     })
-  }
-}
-
-class LiveCollector<T> : ResourceSubscriber<List<T>>(), LiveItems<List<T>> {
-
-  private val liveData = MutableLiveData<List<T>>()
-
-  override fun onError(t: Throwable?) {}
-
-  override fun onComplete() {}
-
-  override fun onNext(t: List<T>) {
-    if (liveData.value == null) {
-      liveData.value = t
-    } else {
-      liveData.value = liveData.value!! + t
-    }
-  }
-
-  override fun observe(owner: LifecycleOwner, onNext: (List<T>) -> Unit) {
-    liveData.observe(owner, Observer {
-      data ->
-      if (data != null) {
-        onNext(data)
-      }
-    })
-  }
-
-  fun clear() {
-    if (liveData.value != null) {
-      liveData.value = listOf<T>()
-    }
   }
 }

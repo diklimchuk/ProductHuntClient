@@ -12,6 +12,10 @@ class PostsAdapter constructor(
     private val itemsProvider: ItemsProvider
 ): RecyclerView.Adapter<PostViewHolder>() {
 
+  companion object {
+    private const val THRESHOLD = 20
+  }
+
   private var items = listOf<Post>()
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -47,13 +51,8 @@ class PostsAdapter constructor(
     notifyDataSetChanged()
   }
 
-  fun clear() {
-    this.items = listOf()
-    notifyDataSetChanged()
-  }
-
   private fun needAnotherPage(currentPosition: Int): Boolean {
-    return items.size - 20 == currentPosition
+    return items.size - THRESHOLD == currentPosition
   }
 
   private fun requestAnotherPage() {
