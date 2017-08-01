@@ -3,6 +3,7 @@
 
   <data>
 
+    <import type="com.a11eca.producthuntclient.presentation.StringUtilsKt"/>
     <variable
       name="post"
       type="com.a11eca.producthuntclient.domain.entity.Post" />
@@ -35,15 +36,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="@{post.name}"
+        android:text="@{StringUtilsKt.ellipsize(post.name, 25)}"
         android:textSize="20sp"
-        tools:text="Name" />
+        tools:text="1234567890123456" />
 
       <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@{post.description}"
+        android:text="@{StringUtilsKt.ellipsize(post.description, 50)}"
         tools:text="Descriptions,s kfjdksalfsadjflkdsajfkljdkslfjlasksdajf jalsf" />
     </LinearLayout>
 
