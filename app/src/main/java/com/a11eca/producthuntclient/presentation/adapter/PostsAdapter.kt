@@ -8,7 +8,8 @@ import com.a11eca.producthuntclient.domain.entity.Post
 
 class PostsAdapter constructor(
     private val layoutManager: RecyclerView.LayoutManager,
-    private val listener: OnPostSelectedListener
+    private val listener: OnPostSelectedListener,
+    private val itemsProvider: ItemsProvider
 ): RecyclerView.Adapter<PostViewHolder>() {
 
   private var items = listOf<Post>()
@@ -31,6 +32,10 @@ class PostsAdapter constructor(
     val item = items[position]
     holder.binding.post = item
     holder.binding.executePendingBindings()
+
+    if (needAnotherPage(position)) {
+      requestAnotherPage()
+    }
   }
 
   override fun getItemCount(): Int {
@@ -41,6 +46,23 @@ class PostsAdapter constructor(
     this.items = items
     notifyDataSetChanged()
   }
+
+  fun clear() {
+    this.items = listOf()
+    notifyDataSetChanged()
+  }
+
+  private fun needAnotherPage(currentPosition: Int): Boolean {
+    return items.size - 20 == currentPosition
+  }
+
+  private fun requestAnotherPage() {
+    itemsProvider.onLoadMore(items.size / 50L + 1)
+  }
+}
+
+interface ItemsProvider {
+  fun onLoadMore(page: Long)
 }
 
 interface OnPostSelectedListener {

@@ -55,17 +55,17 @@ class PostFragment : BaseFragment() {
     val postId = arguments.getLong(ARG_POST_ID)
     postViewModel.setPostId(postId)
 
-    postViewModel.post.observe(this, this::showPost, {}, {})
+    postViewModel.post.observe(this, this::showPost)
   }
 
   fun showPost(post: DetailedPost) {
     binding.post = post
     binding.getIdButton.setOnClickListener({
       val url: String
-      if (!hasHttpPrefix(post.description)) {
-        url = withHttpPrefix(post.description)
+      if (!hasHttpPrefix(post.productLink)) {
+        url = withHttpPrefix(post.productLink)
       } else {
-        url = post.description
+        url = post.productLink
       }
       val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
       startActivity(browserIntent)

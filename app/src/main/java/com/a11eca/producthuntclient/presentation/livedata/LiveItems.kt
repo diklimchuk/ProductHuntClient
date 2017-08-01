@@ -11,6 +11,5 @@ interface LiveItems<T> {
   /**
    * Similar to [android.arch.lifecycle.LiveData.observe()]
    */
-  fun observe(owner: LifecycleOwner, onNext: (T) -> Unit, onComplete: () -> Unit,
-              onError: (t: Throwable) -> Unit)
+  fun observe(owner: LifecycleOwner, onNext: (T) -> Unit)
 }

@@ -11,7 +11,7 @@ interface PostsRepo {
    *
    * @param category Name of the category. Filter to apply to the list of posts.
    */
-  fun getPosts(category: String): Flowable<List<Post>>
+  fun getPosts(category: String, pageNumber: Long): Flowable<List<Post>>
 
   fun getDetailedPost(postId: Long): Flowable<DetailedPost>
 

@@ -9,8 +9,8 @@ import javax.inject.Inject
 class ApiPostsDataSource @Inject constructor(
     private val service: ApiService
 ) : PostsDataSource {
-  override fun getFilteredPosts(category: String): Flowable<List<JsonPost>> {
-    return service.getFilteredPosts(category)
+  override fun getFilteredPosts(category: String, pageNumber: Long): Flowable<List<JsonPost>> {
+    return service.getFilteredPosts(category, pageNumber)
         .map { it.posts }
   }
 

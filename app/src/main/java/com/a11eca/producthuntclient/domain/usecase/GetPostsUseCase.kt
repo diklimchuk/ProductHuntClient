@@ -22,7 +22,11 @@ class GetPostsUseCase @Inject constructor(
     return repo.setFilter(categorySlug)
   }
 
-  fun getFiltered(categorySlug: String): Flowable<List<Post>> {
-    return repo.getPosts(categorySlug)
+  fun getFiltered(categorySlug: String, pageNumber: Long): Flowable<List<Post>> {
+    return repo.getPosts(categorySlug, pageNumber)
+  }
+
+  fun getDefaultFilter(): Flowable<String> {
+    return Flowable.just(DEFAULT_FILTER)
   }
 }

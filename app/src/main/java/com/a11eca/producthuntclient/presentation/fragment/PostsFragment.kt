@@ -31,8 +31,6 @@ class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener, OnPost
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     binding = DataBindingUtil.inflate(inflater, R.layout.fragment_posts, container, false)
 
-    setupPostsList()
-
     return binding.root
   }
 
@@ -44,14 +42,13 @@ class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener, OnPost
     categoriesViewModel = ViewModelProviders.of(this, viewModelFactory)
         .get(CategoriesViewModel::class.java)
 
-    categoriesViewModel.categories.observe(this, this::showCategories, {}, {})
-    categoriesViewModel.posts.observe(this, this::showPosts, {}, {})
+    categoriesViewModel.categories.observe(this, this::showCategories)
+    categoriesViewModel.posts.observe(this, this::showPosts)
+    setupPostsList()
   }
 
   override fun onStart() {
     super.onStart()
-
-    binding.categories.onItemSelectedListener = this
   }
 
   private fun setupPostsList() {
@@ -60,7 +57,7 @@ class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener, OnPost
     val layoutManager = LinearLayoutManager(context)
     binding.posts.layoutManager = layoutManager
 
-    val adapter = PostsAdapter(layoutManager, this)
+    val adapter = PostsAdapter(layoutManager, this, categoriesViewModel)
     binding.posts.adapter = adapter
   }
 
@@ -70,6 +67,8 @@ class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener, OnPost
 
   fun showCategories(data: CategoriesData) {
     binding.categories.adapter = createCategoriesAdapter(data)
+    binding.categories.setSelection(0, false)
+    binding.categories.onItemSelectedListener = this
   }
 
   fun createCategoriesAdapter(data: CategoriesData): SpinnerAdapter {
@@ -89,6 +88,7 @@ class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener, OnPost
   override fun onNothingSelected(parent: AdapterView<*>) {}
 
   override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
+    categoriesViewModel.posts.clear()
     val itemData = binding.categories.adapter.getItem(pos)
     val category = extractCategorySlug(itemData as Map<String, String>)
     categoriesViewModel.setPostsFilter(category)

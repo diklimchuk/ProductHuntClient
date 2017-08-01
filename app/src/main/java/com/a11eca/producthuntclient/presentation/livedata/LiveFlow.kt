@@ -11,64 +11,54 @@ import io.reactivex.subscribers.ResourceSubscriber
  */
 class LiveFlow<T : Any> : ResourceSubscriber<T>(), LiveItems<T> {
 
-  private val liveData = MutableLiveData<Item<T>>()
+  private val liveData = MutableLiveData<T>()
 
-  override fun onError(e: Throwable) {
-    liveData.value = Item.error<T>(e)
-  }
+  override fun onError(t: Throwable?) {}
 
-  override fun onComplete() {
-    liveData.value = Item.complete<T>()
-  }
+  override fun onComplete() {}
 
   override fun onNext(t: T) {
-    liveData.value = Item.next(t)
+    liveData.value = t
   }
 
-  override fun observe(owner: LifecycleOwner, onNext: (T) -> Unit, onComplete: (() -> Unit),
-                       onError: ((t: Throwable) -> Unit)) {
+  override fun observe(owner: LifecycleOwner, onNext: (T) -> Unit) {
     liveData.observe(owner, Observer {
       data ->
       if (data != null) {
-        if (!data.isSuccessful) {
-          onError(data.throwable)
-        } else if (data.isFinished) {
-          onComplete()
-        } else {
-          onNext(data.item)
-        }
+        onNext(data)
       }
     })
   }
 }
 
+class LiveCollector<T> : ResourceSubscriber<List<T>>(), LiveItems<List<T>> {
 
-private class Item<T : Any> private constructor(
-    val isSuccessful: Boolean,
-    val isFinished: Boolean = false
-) {
+  private val liveData = MutableLiveData<List<T>>()
 
-  lateinit var throwable: Throwable
-    private set
+  override fun onError(t: Throwable?) {}
 
-  lateinit var item: T
+  override fun onComplete() {}
 
-  companion object {
-    fun <T : Any> complete(): Item<T> {
-      val result = Item<T>(true, true)
-      return result
+  override fun onNext(t: List<T>) {
+    if (liveData.value == null) {
+      liveData.value = t
+    } else {
+      liveData.value = liveData.value!! + t
     }
+  }
 
-    fun <T : Any> next(data: T): Item<T> {
-      val result = Item<T>(true)
-      result.item = data
-      return result
-    }
+  override fun observe(owner: LifecycleOwner, onNext: (List<T>) -> Unit) {
+    liveData.observe(owner, Observer {
+      data ->
+      if (data != null) {
+        onNext(data)
+      }
+    })
+  }
 
-    fun <T : Any> error(t: Throwable): Item<T> {
-      val result = Item<T>(false)
-      result.throwable = t
-      return result
+  fun clear() {
+    if (liveData.value != null) {
+      liveData.value = listOf<T>()
     }
   }
 }
