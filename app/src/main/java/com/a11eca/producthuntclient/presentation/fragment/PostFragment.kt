@@ -62,13 +62,21 @@ class PostFragment : BaseFragment() {
     binding.post = post
     binding.getIdButton.setOnClickListener({
       val url: String
-      if (!post.description.startsWith("http://") && !post.description.startsWith("https://")) {
-        url = "http://" + post.description
+      if (!hasHttpPrefix(post.description)) {
+        url = withHttpPrefix(post.description)
       } else {
         url = post.description
       }
       val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
       startActivity(browserIntent)
     })
+  }
+
+  private fun withHttpPrefix(str: String): String {
+    return "http://" + str
+  }
+
+  private fun hasHttpPrefix(str: String): Boolean {
+    return !str.startsWith("http://") && !str.startsWith("https://")
   }
 }
