@@ -31,6 +31,8 @@ class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener, OnPost
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     binding = DataBindingUtil.inflate(inflater, R.layout.fragment_posts, container, false)
 
+    binding.isListEmpty = true
+
     return binding.root
   }
 
@@ -59,6 +61,7 @@ class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener, OnPost
 
   fun showPosts(data: List<Post>) {
     (binding.posts.adapter as PostsAdapter).updateItems(data)
+    binding.isListEmpty = data.isEmpty()
   }
 
   fun showCategories(data: CategoriesData) {
