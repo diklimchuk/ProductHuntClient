@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.a11eca.producthuntclient.R
+import com.a11eca.producthuntclient.databinding.ItemPostBinding
 import com.a11eca.producthuntclient.domain.entity.Post
 
 class PostsAdapter : RecyclerView.Adapter<PostViewHolder>() {
@@ -14,16 +15,16 @@ class PostsAdapter : RecyclerView.Adapter<PostViewHolder>() {
   private var items = listOf<Post>()
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-    val view = LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false)
-    val viewHolder = PostViewHolder(view)
+    val layoutInflater = LayoutInflater.from(parent.context)
+    val binding = ItemPostBinding.inflate(layoutInflater, parent, false)
+    val viewHolder = PostViewHolder(binding)
     return viewHolder
   }
 
   override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
     val item = items[position]
-    holder.name.text = item.name
-    holder.title.text = item.description
-    holder.upvoteNumber.text = item.votesCount.toString()
+    holder.binding.post = item
+    holder.binding.executePendingBindings()
   }
 
   override fun getItemCount(): Int {
@@ -37,10 +38,5 @@ class PostsAdapter : RecyclerView.Adapter<PostViewHolder>() {
 }
 
 class PostViewHolder constructor(
-    itemView: View
-): RecyclerView.ViewHolder(itemView) {
-  val thumbnail: ImageView = itemView.findViewById(R.id.thumbnail)
-  val name: TextView = itemView.findViewById(R.id.name)
-  val title: TextView = itemView.findViewById(R.id.title)
-  val upvoteNumber: TextView = itemView.findViewById(R.id.upvote_number)
-}
+    val binding: ItemPostBinding
+): RecyclerView.ViewHolder(binding.root)
