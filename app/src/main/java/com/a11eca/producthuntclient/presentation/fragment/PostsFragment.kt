@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.SimpleAdapter
 import android.widget.SpinnerAdapter
-import android.widget.Toast
 import com.a11eca.producthuntclient.R
 import com.a11eca.producthuntclient.databinding.FragmentPostsBinding
 import com.a11eca.producthuntclient.domain.entity.Post
@@ -81,7 +80,10 @@ class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener, OnPost
   }
 
   override fun onPostSelected(postId: Long) {
-    Toast.makeText(context, "Selected post with id=$postId", Toast.LENGTH_SHORT).show()
+    fragmentManager.beginTransaction()
+        .replace(R.id.content_root, PostFragment.newInstance(postId))
+        .addToBackStack(null)
+        .commit()
   }
 
   override fun onNothingSelected(parent: AdapterView<*>) {}
