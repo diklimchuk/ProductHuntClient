@@ -21,7 +21,7 @@ class PostsRepoImpl @Inject constructor(
   private val postsFilter = BehaviorSubject.create<String>().toSerialized()
 
   override fun getPosts(category: String, pageNumber: Long): Flowable<List<Post>> {
-    return dataSourceFactory.choose()
+    return dataSourceFactory.choosePostPageSource(category, pageNumber)
         .getFilteredPosts(category, pageNumber)
         .subscribeOn(Schedulers.io())
         .observeOn(Schedulers.computation())
@@ -29,7 +29,7 @@ class PostsRepoImpl @Inject constructor(
   }
 
   override fun getDetailedPost(postId: Long): Flowable<DetailedPost> {
-    return dataSourceFactory.choose()
+    return dataSourceFactory.choosePostSource(postId)
         .getDetailedPost(postId)
         .subscribeOn(Schedulers.io())
         .observeOn(Schedulers.computation())
