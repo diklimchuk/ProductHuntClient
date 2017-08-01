@@ -2,18 +2,25 @@ package com.a11eca.producthuntclient.presentation.livedata
 
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import io.reactivex.subscribers.ResourceSubscriber
 
+/**
+ * Interface for RxJava-style [LiveData] implementations.
+ */
 interface LiveItems<T> {
 
   /**
-   * Same as [android.arch.lifecycle.LiveData.observe()]
+   * Similar to [android.arch.lifecycle.LiveData.observe()]
    */
   fun observe(owner: LifecycleOwner, onNext: (T) -> Unit, onComplete: () -> Unit,
               onError: (t: Throwable) -> Unit)
 }
 
+/**
+ * Adapter class for which makes [LiveData] easier to use.
+ */
 class LiveFlow<T : Any> : ResourceSubscriber<T>(), LiveItems<T> {
 
   private val liveData = MutableLiveData<Item<T>>()

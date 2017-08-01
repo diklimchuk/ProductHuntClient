@@ -43,8 +43,8 @@ class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
     categoriesViewModel = ViewModelProviders.of(this, viewModelFactory)
         .get(CategoriesViewModel::class.java)
 
-    categoriesViewModel.getCategories().observe(this, this::showCategories, {}, {})
-    categoriesViewModel.getPosts().observe(this, this::showPosts, {}, {})
+    categoriesViewModel.categories.observe(this, this::showCategories, {}, {})
+    categoriesViewModel.posts.observe(this, this::showPosts, {}, {})
   }
 
   override fun onStart() {

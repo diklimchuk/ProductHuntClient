@@ -1,5 +1,7 @@
 package com.a11eca.producthuntclient.presentation.viewmodel
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import com.a11eca.producthuntclient.domain.entity.Category
 import com.a11eca.producthuntclient.domain.entity.Post
 import com.a11eca.producthuntclient.domain.usecase.GetCategoryUseCase
@@ -16,32 +18,27 @@ class CategoriesViewModel @Inject constructor(
     private val getPostsUseCase: GetPostsUseCase
 ) : BaseViewModel() {
 
-  fun getCategories(): LiveItems<CategoriesData> {
-    return addLocalScopeDisposable(getPostsUseCase.getFilter()
-        .switchMap {
-          filterCategory ->
-          getCategoryUseCase.getCategories()
-              .map { categories -> CategoriesData(sortCategories(filterCategory, categories)) }
-        }
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribeWith(LiveFlow<CategoriesData>()))
-  }
+  val categories = addLocalScopeDisposable(getPostsUseCase.getFilter()
+      .switchMap {
+        filterCategory ->
+        getCategoryUseCase.getCategories()
+            .map { categories -> CategoriesData(sortCategories(filterCategory, categories)) }
+      }
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribeWith(LiveFlow<CategoriesData>()))!!
+
+  val posts = addLocalScopeDisposable(getPostsUseCase.getFilter()
+      .switchMap {
+        filter ->
+        addEmptyPostsList(getPostsUseCase.getFiltered(filter))
+      }
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribeWith(LiveFlow<List<Post>>()))!!
 
   fun setPostsFilter(categorySlug: String) {
     addLocalScopeDisposable(getPostsUseCase.setFilter(categorySlug)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe({}, {}))
-  }
-
-  fun getPosts(): LiveFlow<List<Post>> {
-    return addLocalScopeDisposable(getPostsUseCase.getFilter()
-        .switchMap {
-          filter ->
-          addEmptyPostsList(getPostsUseCase.getFiltered(filter))
-        }
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribeWith(LiveFlow<List<Post>>())
-    )
   }
 
   private fun addEmptyPostsList(flowable: Flowable<List<Post>>): Flowable<List<Post>> {
