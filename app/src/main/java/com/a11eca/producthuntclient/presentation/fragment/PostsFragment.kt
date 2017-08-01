@@ -19,14 +19,16 @@ import com.a11eca.producthuntclient.presentation.adapter.OnPostSelectedListener
 import com.a11eca.producthuntclient.presentation.adapter.PostsAdapter
 import com.a11eca.producthuntclient.presentation.entity.CategoriesData
 import com.a11eca.producthuntclient.presentation.viewmodel.CategoriesViewModel
+import com.a11eca.producthuntclient.presentation.viewmodel.PostsViewModel
 import javax.inject.Inject
 
 class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener, OnPostSelectedListener {
 
   @Inject
   internal lateinit var viewModelFactory: ViewModelProvider.Factory
-  internal lateinit var categoriesViewModel: CategoriesViewModel
-  internal lateinit var binding: FragmentPostsBinding
+  private lateinit var categoriesViewModel: CategoriesViewModel
+  private lateinit var postsViewModel: PostsViewModel
+  private lateinit var binding: FragmentPostsBinding
 
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     binding = DataBindingUtil.inflate(inflater, R.layout.fragment_posts, container, false)
@@ -41,11 +43,12 @@ class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener, OnPost
 
     (activity.application as PHCApplication).applicationComponent.inject(this)
 
-    categoriesViewModel = ViewModelProviders.of(this, viewModelFactory)
-        .get(CategoriesViewModel::class.java)
+    val viewModelProvider = ViewModelProviders.of(this, viewModelFactory)
+    categoriesViewModel = viewModelProvider.get(CategoriesViewModel::class.java)
+    postsViewModel = viewModelProvider.get(PostsViewModel::class.java)
 
     categoriesViewModel.categories.observe(this, this::showCategories)
-    categoriesViewModel.posts.observe(this, this::showPosts)
+    postsViewModel.posts.observe(this, this::showPosts)
     setupPostsList()
   }
 
@@ -55,7 +58,7 @@ class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener, OnPost
     val layoutManager = LinearLayoutManager(context)
     binding.posts.layoutManager = layoutManager
 
-    val adapter = PostsAdapter(layoutManager, this, categoriesViewModel)
+    val adapter = PostsAdapter(layoutManager, this, postsViewModel)
     binding.posts.adapter = adapter
   }
 
@@ -87,11 +90,11 @@ class PostsFragment : BaseFragment(), AdapterView.OnItemSelectedListener, OnPost
   override fun onNothingSelected(parent: AdapterView<*>) {}
 
   override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
-    categoriesViewModel.posts.clear()
+    postsViewModel.posts.clear()
     val itemData = binding.categories.adapter.getItem(pos)
     @Suppress("UNCHECKED_CAST")
     val category = extractCategorySlug(itemData as Map<String, String>)
-    categoriesViewModel.setPostsFilter(category)
+    postsViewModel.setPostsFilter(category)
   }
 
   private fun extractCategorySlug(itemData: Map<String, String>): String {
