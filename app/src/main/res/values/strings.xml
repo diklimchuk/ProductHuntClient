@@ -1,3 +1,4 @@
 <resources>
   <string name="app_name">ProductHuntClient</string>
+  <string name="get_it">Get it</string>
 </resources>

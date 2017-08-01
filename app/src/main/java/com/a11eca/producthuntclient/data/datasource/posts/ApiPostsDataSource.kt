@@ -16,6 +16,6 @@ class ApiPostsDataSource @Inject constructor(
 
   override fun getDetailedPost(postId: Long): Flowable<JsonDetailedPost> {
     return service.getDetailedPost(postId)
-        .map { it.posts[0] }
+        .map { it.post }
   }
 }

@@ -1,7 +1,7 @@
 package com.a11eca.producthuntclient.data.api.service
 
 import com.a11eca.producthuntclient.data.api.json.JsonCategories
-import com.a11eca.producthuntclient.data.api.json.JsonDetailedPosts
+import com.a11eca.producthuntclient.data.api.json.JsonDetailedPostWrapper
 import com.a11eca.producthuntclient.data.api.json.JsonPosts
 import io.reactivex.Flowable
 import retrofit2.http.GET
@@ -23,5 +23,5 @@ interface ApiService {
    * Returned json contains only one item.
    */
   @GET("posts/{id}")
-  fun getDetailedPost(@Path("id") postId: Long): Flowable<JsonDetailedPosts>
+  fun getDetailedPost(@Path("id") postId: Long): Flowable<JsonDetailedPostWrapper>
 }

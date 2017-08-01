@@ -8,7 +8,7 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget
 
 
 @BindingAdapter("bind:imageUrl", "@bind:error")
-fun loadImage(view: ImageView, url: String, error: Drawable) {
+fun loadImage(view: ImageView, url: String?, error: Drawable) {
   val imageViewTarget = GlideDrawableImageViewTarget(view)
-  Glide.with(view.context).load(url).error(error).into(imageViewTarget)
+  Glide.with(view.context).load(url ?: "").error(error).into(imageViewTarget)
 }
